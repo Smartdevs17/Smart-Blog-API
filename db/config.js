@@ -1,14 +1,11 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/smartBlogDB",
-                    {useNewUrlParser: true,
-                    useFindAndModify: false,
-                    useUnifiedTopology: true});
+mongoose.connect(process.env.MONGO_URL,{useNewUrlParser: true,useCreateIndex: true,useUnifiedTopology: true,useFindAndModify: false});
 
 const connection = mongoose.connection;
-connection.once("error",(error) => console.error());
+connection.once("error",(error) => console.error(error));
 connection.on("open",() => console.log("Connected to DB"));
 
 
 
-module.exports = connection
+module.exports = connection;

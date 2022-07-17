@@ -6,17 +6,16 @@ const UserSchema= new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        uniquire: true
+        unique: true
     },
      email: {
         type: String,
         required: true,
-        uniquire: true
+        unique: true
     },
      password: {
         type: String,
         required: true,
-        uniquire: true
     },
      profilePic: {
         type: String,
