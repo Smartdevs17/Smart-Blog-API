@@ -17,19 +17,25 @@ const ReadUser = async(data) => {
 //Upate a user profile
 const PatchUser = async(data) => {
     try {
-        //Upate the user password
-        if(data.password){
-            let salt = await bcrypt.genSalt(10);
-            let hashedPassword = await bcrypt.hash(data.password,salt);
-            data.password = hashedPassword;
-            let updatedUser = await User.findByIdAndUpdate( data.userId,{$set: data},{new: true});
-            let {password,...results} = updatedUser._doc;
-            return {success: true,message: results};
+        //Check if User exit with that id
+        const user = await User.findById(data.id);
+        if(user){
+            //Upate the user password
+            if(data.password){
+                let salt = await bcrypt.genSalt(10);
+                let hashedPassword = await bcrypt.hash(data.password,salt);
+                data.password = hashedPassword;
+                let updatedUser = await User.findByIdAndUpdate( data.userId,{$set: data},{new: true});
+                let {password,...results} = updatedUser._doc;
+                return {success: true,message: results};
+            }else{
+                //Update user profile with the given data
+                let updatedUser = await User.findByIdAndUpdate(data.userId,{$set: data},{new: true});
+                let {password,...results} = updatedUser._doc;
+                return {success: true,message: results}
+            }
         }else{
-            //Update user profile with the given data
-            let updatedUser = await User.findByIdAndUpdate(data.userId,{$set: data},{new: true});
-            let {password,...results} = updatedUser._doc;
-            return {success: true,message: results}
+            return {success: false,message: "No user found with that id"}
         }
     } catch (error) {
         // In the case there is an error updating the user
@@ -43,10 +49,13 @@ const RemoveUser = async(data) => {
     try {
         // find ther user by his or her id and delete
         let user = await User.findByIdAndDelete(data.userId);
-        return {success: true,message: "Successfully deleted user account"}
+        if(user){
+            return {success: true,message: "Successfully deleted user account"}
+        }else{
+            return {success: false, message: "No user found with that id"}
+        }
     } catch (error) {
           // In the case there is an error removing the user
-          console.log(error.message);
           return {success: false,message: error.message} 
     }
 }

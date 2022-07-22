@@ -3,7 +3,7 @@ const {CreateUser, ValidateUser} = require("../../services/auth/auth");
 // Register User
 const RegisterUser = async(req,res) => {
     try {
-        //Destructure the username email and password from request body
+        //Destructure the username,email and password from request body
         const {username,email,password} = req.body;
         //Check if the required field are sent
         if (username && email && password) {
@@ -28,7 +28,7 @@ const RegisterUser = async(req,res) => {
             res.status(400).json({
                 success: false,
                 error: "Bad request",
-                message: "Username email and password is request"
+                message: "Username,email and password is request"
             });
         }
     } catch (error) {

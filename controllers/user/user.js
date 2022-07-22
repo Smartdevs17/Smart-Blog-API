@@ -3,7 +3,7 @@ const { PatchUser, RemoveUser,ReadUser } = require("../../services/user/user");
 
 const GetUser = async (req, res) => {
     try {
-        // Get a particular user
+        // Get a particular  user
         const id = req.params.id;
         const user = await ReadUser(id);
         const {success,message} = user;
