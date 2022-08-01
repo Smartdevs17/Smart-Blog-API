@@ -14,6 +14,7 @@ const CreateUser = async (data) => {
         let newUser = new User(data);
         let savedUser = await newUser.save();
         const {password,...results} = savedUser._doc;
+        
         // Return Registered  Data
         return {success: true,message: results};
         // console.log(savedUser);

@@ -5,8 +5,12 @@ const ReadUser = async(data) => {
     try {
         //find user by id from db
         let existingUser = await User.findById(data);
-        const {password, ...results} = existingUser._doc;
-        return {success: true, message: results}
+        if(existingUser){
+            const {password, ...results} = existingUser._doc;
+            return {success: true, message: results}
+        }else{
+            return {success: false, message: "No user found with that id"}
+        }
     } catch (error) {
     // In the case there is an error getting the user
      console.log(error.message);
@@ -18,7 +22,7 @@ const ReadUser = async(data) => {
 const PatchUser = async(data) => {
     try {
         //Check if User exit with that id
-        const user = await User.findById(data.id);
+        const user = await User.findById(data.userId);
         if(user){
             //Upate the user password
             if(data.password){

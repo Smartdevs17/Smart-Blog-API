@@ -1,9 +1,10 @@
+const {ObjectId} = require("mongodb");
 const {CreateComment,FetchComment,FetchPostComment,RemoveComment,PatchComment} = require("../../services/comment/comment");
 
 const CreateAComment = async(req,res) => {
     try {
-        const {userId,postId,name} = req.body;
-        if(userId && postId && name){
+        const {userId,postId} = req.body;
+        if(ObjectId.isValid(userId) && ObjectId.isValid(postId)){
             const values = req.body;
             const newComment = await CreateComment(values)
             const {success,message} = newComment;
@@ -74,12 +75,12 @@ const GetAllPostComment = async(req,res) => {
             const {success,message} = getPostComment;
         
             if(success){
-                res.status(201).json({
+                res.status(200).json({
                     success,message
                 })
             }else{
-                res.status(500).json({
-                    success,message,error: "There was an error while saving comment to database"
+                res.status(404).json({
+                    success,message,error: "There was an error while fetching all comment of the post"
                 });
             }   
         }else{
@@ -146,12 +147,12 @@ const DeleteComment = async(req,res) => {
             const {success,message} = deletedComment;
             // check if user was deleted successfully
             if(success){
-                res.status(201).json({
+                res.status(200).json({
                     success: true,
                     message
                 });
             }else{
-                res.status(500).json({
+                res.status(404).json({
                     success: false,
                     message,
                     error: "There was a problem with the request"

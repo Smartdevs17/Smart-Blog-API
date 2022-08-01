@@ -1,6 +1,7 @@
 const { values } = require("lodash");
 const Post = require("../../models/Post");
 const User = require("../../models/User");
+const Comment = require("../../models/Comment");
 
 
 // Create New Post
@@ -87,8 +88,11 @@ const RemovePost = async(id,userId) => {
         const post = await Post.findById(id);
         if(post){
             if(post.username.toString() === userId){
+                // delete post
                 const deletedPost = await Post.findByIdAndDelete(post._id);
-                return {success: true, message: "Post successfully deleted"}
+                //Delete comments of the post
+                const deletedComment = await Comment.deleteMany({postId: deletedPost._id})
+                return {success: true, message: deletedPost}
             }else{
                 return {success: false, message: "Invalid credentials as your can only delete your own post"}
             }

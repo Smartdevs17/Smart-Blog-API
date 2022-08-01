@@ -1,10 +1,11 @@
+const {ObjectId} = require("mongodb");
 const {SavePost,PatchPost,FetchAPost,FetchUserPost,RemovePost} = require("../../services/post/post");
 
 // Create New Post
 const CreatePost = async(req,res) => {
     try {
         const {username,title} = req.body;
-        if(username && title){
+        if(ObjectId.isValid(username) && title){
             const values = req.body;
             const newPost = await SavePost(values)
             const {success,message} = newPost;
@@ -137,8 +138,9 @@ const DeletePost = async(req,res) => {
             // check if user was deleted successfully
             if(success){
                 res.status(201).json({
-                    success: true,
-                    message
+                    success,
+                    message,
+                    result: "Post together with it comment was successfully deleted successfully deleted"
                 });
             }else{
                 res.status(400).json({
