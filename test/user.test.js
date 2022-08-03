@@ -56,6 +56,43 @@ describe("PUT /api/users/update/:id",() => {
     })
 });
 
+describe("DELETE /api/users/delete/id",()=> {
+    it("should delete a user",(done) => {
+        let id = users[1]._id.toHexString();
+        let user = {
+            userId: id
+        }
+        request(app)
+        .delete(`/api/users/delete/${id}`)
+        .send(user)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.success).toBe(true);
+
+        })
+        .end((err,res) => {
+            if(err) return done(err);
+            User.findById(id).then((user) => {
+                expect(user).toBeNull();
+                done();
+            }).catch((err) => done(err))
+        });
+    });
+
+    it("should return 403 if user credentials not valid",(done) => {
+        let id = users[1]._id.toHexString();
+        let user = {
+            userId: new ObjectId().toHexString()
+        }
+
+        request(app)
+        .delete(`/api/users/delete/${id}`)
+        .send(user)
+        .expect(403)
+        .end(done)
+    })
+});
+
 
 
 

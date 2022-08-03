@@ -91,28 +91,35 @@ const DeleteUser = async(req,res) => {
     try {
         // verify the person deleting his or her account
         const id = req.params.id;
-        if(req.body.userId === id){
-            const deletedUser = await RemoveUser(req.body);
-            const {success,message} = deletedUser;
-            // check if user was deleted successfully
-            if(success){
-                res.status(201).json({
-                    success: true,
-                    message
-                });
+        if(ObjectId.isValid(id) && ObjectId.isValid(req.body.userId)){
+            if(req.body.userId === id){
+                const deletedUser = await RemoveUser(req.body);
+                const {success,message} = deletedUser;
+                // check if user was deleted successfully
+                if(success){
+                    res.status(200).json({
+                        success: true,
+                        message
+                    });
+                }else{
+                    res.status(400).json({
+                        success: false,
+                        message,
+                        error: "The was a problem with the request"
+                    });
+                }
             }else{
-                res.status(400).json({
+                res.status(403).json({
                     success: false,
-                    message,
-                    error: "The was a problem with the request"
+                    error: "You can only update your own profile"
                 });
-            }
+            }  
         }else{
-            res.status(403).json({
+            res.status(400).json({
                 success: false,
-                error: "You can only update your own profile"
-            });
-        }        
+                error: "Bad Credentials.Please use a valid id"
+            }); 
+        }
     } catch (error) {
         //Incase of a server error
         console.log(error.message);
