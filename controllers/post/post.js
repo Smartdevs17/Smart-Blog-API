@@ -9,18 +9,17 @@ const CreatePost = async(req,res) => {
             const values = req.body;
             const newPost = await SavePost(values)
             const {success,message} = newPost;
-            
             if(success){
                 res.status(201).json({
                     success,message
                 })
             }else{
-                res.status(500).json({
+                res.status(404).json({
                     success,message,error: "The was an error while saving post to database"
                 });
             }
         }else{
-            res.status(400).json({
+            res.status(403).json({
                 success: false,
                 message: "User id and post title is required"
             })

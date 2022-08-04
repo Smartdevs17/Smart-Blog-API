@@ -3,14 +3,13 @@ const expect = require("expect").expect;
 const request = require("supertest");
 const app = require("../app");
 const User = require("../models/User");
-const users = require("./data");
+const {users} = require("./data");
 
 
 
 describe("GET /api/users/:id",() => {
     it("should return the user that has that id",(done) => {
         let user = users[0]._id.toHexString();
-        console.log(user)
         request(app)
         .get(`/api/users/${user}`)
         .expect(200)

@@ -1,4 +1,9 @@
-const {ObjectId} = require("mongodb")
+const User = require("../models/User");
+const Post = require("../models/Post");
+const {ObjectId} = require("mongodb");
+
+
+
 const users = [
     {
         _id: new ObjectId(),
@@ -20,4 +25,41 @@ const users = [
     }
 ];
 
-module.exports = users;
+
+const posts = [
+    {
+        _id: new ObjectId(),
+        username: users[0]._id,
+        title: "Post One Title",
+        desc: "This is post one test title",
+    },
+    {
+        _id: new ObjectId(),
+        username: users[0]._id,
+        title: "Post Two Title",
+        desc: "This is post two test title",
+    },
+    {
+        _id: new ObjectId(),
+        username: users[1]._id,
+        title: "Post three Title",
+        desc: "This is post three test title",
+    }
+];
+
+const populateUser = (done) => {
+    User.deleteMany().then(() => {
+        return User.insertMany(users).then(()=> done());
+    });
+};
+
+const populatePost = (done) => {
+    Post.deleteMany().then(() => {
+        return Post.insertMany(posts).then(() => done());
+    });
+};
+
+
+
+
+module.exports = {populateUser,populatePost,users,posts};

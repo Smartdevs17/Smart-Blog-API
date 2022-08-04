@@ -3,17 +3,15 @@ const request = require("supertest");
 const bcrypt = require("bcrypt")
 const app = require("../app");
 const User = require("../models/User");
+const Post = require("../models/Post");
 const {ObjectId} = require("mongodb");
-const users = require("./data");
+
+const { populateUser,populatePost,users } = require("./data");
 
 
 
-
-before((done) => {
-    User.deleteMany().then(() => {
-        return User.insertMany(users).then(() => done());
-    });
-});
+beforeEach(populateUser);
+beforeEach(populatePost);
 
 
 describe("POST /api/auth/register",() => {
