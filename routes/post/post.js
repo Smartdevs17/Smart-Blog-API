@@ -4,7 +4,7 @@ const {CreatePost,UpdatePost,GetAPost,GetUserPost, DeletePost} = require("../../
 
 router.post("/create_post",CreatePost);
 router.get("/:id",GetAPost);
-router.get("/",GetUserPost)
+router.get("/user/:id",GetUserPost)
 router.put("/update_post/:id",UpdatePost);
 router.delete("/delete_post/:id",DeletePost)
 

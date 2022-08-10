@@ -11,7 +11,6 @@ const { populateUser,populatePost,users } = require("./data");
 
 
 beforeEach(populateUser);
-beforeEach(populatePost);
 
 
 describe("POST /api/auth/register",() => {

@@ -38,7 +38,7 @@ const UpdatePost = async(req,res) => {
     try {
         const id = req.params.id;
         const {username} = req.body;
-        if(id && username){
+        if(ObjectId.isValid(id) && ObjectId.isValid(username)){
             const values = req.body;
             const updatedPost = await PatchPost(id,values);
             const {success,message} = updatedPost;
@@ -47,7 +47,7 @@ const UpdatePost = async(req,res) => {
                     success,message
                 })
             }else{
-                res.status(500).json({
+                res.status(404).json({
                     success,message,error: "The was an error while updating post to database"
                 });
             }
@@ -55,8 +55,8 @@ const UpdatePost = async(req,res) => {
         }else{
             res.status(400).json({
                 success: false,
-                message: "User is required to update post"
-            })
+                message: "Valid user id is required to update post"
+            });
         }
     } catch (error) {
         res.status(500).json({
@@ -72,22 +72,30 @@ const UpdatePost = async(req,res) => {
 const GetAPost = async(req,res) => {
     try {
         const id = req.params.id;
-        const post = await FetchAPost(id);
-        const {success,message} = post;
-        if(success){
-            res.status(200).json({
-                success,message
-            })
+        if(ObjectId.isValid(id)){
+            const post = await FetchAPost(id);
+            const {success,message} = post;
+            if(success){
+                res.status(200).json({
+                    success,message
+                })
+            }else{
+                res.status(404).json({
+                    success,message,error: "The was an error while fetching post to database"
+                });
+            }
         }else{
-            res.status(500).json({
-                success,message,error: "The was an error while fetching post to database"
-            });
+            res.status(400).json({
+                success: false,
+                message: "Please use valid post id"
+            })
         }
+
     } catch (error) {
         res.status(500).json({
             success: false,
             error: "There seems to be a problem with the server will be fixed soon",
-            message: error
+            message: error.message
         });   
     }
 };
@@ -96,8 +104,8 @@ const GetAPost = async(req,res) => {
 //Get all post made by a user
 const GetUserPost = async(req,res) => {
     try {
-        const userId = req.body.userId;
-        if(userId){
+        const userId = req.params.id;
+        if(ObjectId.isValid(userId)){
             const userPost = await FetchUserPost(userId);
             const {success,message} = userPost;
             if(success){
@@ -105,14 +113,14 @@ const GetUserPost = async(req,res) => {
                     success,message
                 })
             }else{
-                res.status(500).json({
+                res.status(404).json({
                     success,message,error: "The was an error while fetching users post to database"
                 });
             }
         }else{
             res.status(400).json({
                 success: false,
-                message: "User id is required"
+                message: "Valid User id is required"
             });
         }
     } catch (error) {

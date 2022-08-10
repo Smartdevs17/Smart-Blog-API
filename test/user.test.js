@@ -19,6 +19,17 @@ describe("GET /api/users/:id",() => {
         })
         .end(done)
     });
+
+    it("should return 404 if user not found with that id",(done) => {
+        let id = new ObjectId()
+        request(app)
+        .get(`/api/users/${id}`)
+        .expect(404)
+        .expect((res) => {
+            expect(res.body.success).toBe(false)
+        })
+        .end(done)
+    })
 });
 
 describe("PUT /api/users/update/:id",() => {
